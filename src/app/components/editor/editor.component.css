@@ -1,0 +1,135 @@
+/* Contenedor general */
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+/* Estilo del área de texto */
+textarea {
+  width: 100%;
+  height: 250px;
+  background: #252526;
+  color: #ffffff;
+  border: 2px solid #3a3d41;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  outline: none;
+  resize: none;
+  transition: border 0.3s ease-in-out;
+}
+
+textarea:focus {
+  border-color: #007acc;
+  box-shadow: 0px 0px 10px #007acc;
+}
+
+/* Botones */
+.buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button, .file-upload {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover, .file-upload:hover {
+  background: #005f99;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.file-upload {
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px 15px;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Salida del compilador */
+.output {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #252526;
+  color: white;
+  border-radius: 5px;
+  border: 2px solid #3a3d41;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.success-message {
+  color: #00ff7f;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.error-message {
+  color: #ff4c4c;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Tabla de tokens */
+.token-table {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 15px;
+  border-collapse: collapse;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.token-table th, .token-table td {
+  padding: 10px;
+  border: 1px solid #3a3d41;
+  text-align: left;
+}
+
+.token-table th {
+  background: #007acc;
+  color: white;
+}
+
+.token-table tr:nth-child(even) {
+  background: #252526;
+}
+
+.token-table tr:nth-child(odd) {
+  background: #1e1e1e;
+}

@@ -1,0 +1,43 @@
+<div class="editor-container">
+    <!-- Área de código -->
+    <textarea [value]="code" (input)="onCodeChange($event)" placeholder="Escribe tu código aquí..."></textarea>
+
+    <!-- Controles -->
+    <div class="buttons">
+        <button (click)="newFile()">🆕 Nuevo Archivo</button>
+        
+        <!-- Entrada de archivo oculta con un label personalizado -->
+        <label class="file-upload">
+            📂 Abrir Archivo
+            <input type="file" (change)="openFile($event)" hidden>
+        </label>
+        
+        <button (click)="deleteFile()">🗑 Eliminar Archivo</button>
+        <button (click)="viewTokens()">🔍 Ver Tokens</button>
+        <button (click)="compileCode()">🚀 Compilar</button>
+    </div>
+
+    <!-- Mensaje de salida -->
+    <div class="output" *ngIf="output" [@fadeInOut]>
+        <h3>Salida:</h3>
+        <p [ngClass]="{ 'success-message': isSuccess, 'error-message': !isSuccess }">
+            {{ output }}
+        </p>
+    </div>
+
+    <!-- Tabla de tokens -->
+    <table class="token-table" *ngIf="tokens.length > 0">
+        <thead>
+            <tr>
+                <th>📝 Tipo</th>
+                <th>🔡 Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let token of tokens">
+                <td>{{ token.type }}</td>
+                <td>{{ token.value }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
