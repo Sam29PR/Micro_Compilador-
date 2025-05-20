@@ -1,20 +1,29 @@
 <div class="editor-container">
     <!-- Área de código -->
     <textarea [value]="code" (input)="onCodeChange($event)" placeholder="Escribe tu código aquí..."></textarea>
-
+    
     <!-- Controles -->
     <div class="buttons">
-        <button (click)="newFile()">🆕 Nuevo Archivo</button>
-        
-        <!-- Entrada de archivo oculta con un label personalizado -->
+        <!-- 🆕 Crear nuevo archivo -->
+        <button (click)="nuevoArchivo()">🆕 Nuevo Archivo</button>
+
+        <!-- 📂 Abrir archivo local -->
         <label class="file-upload">
             📂 Abrir Archivo
-            <input type="file" (change)="openFile($event)" hidden>
+            <input type="file" #fileInput hidden (change)="openFileLocal($event)">
         </label>
-        
-        <button (click)="deleteFile()">🗑 Eliminar Archivo</button>
+
+        <!-- 💾 Guardar archivo -->
+        <button (click)="saveFile()">💾 Guardar Archivo</button>
+
+        <!-- 🗑 Eliminar archivo -->
+        <button (click)="deleteFileLocal()">🗑 Eliminar Archivo</button>
+
+        <!-- 🔍 Ver tokens -->
         <button (click)="viewTokens()">🔍 Ver Tokens</button>
-        <button (click)="compileCode()">🚀 Compilar</button>
+
+        <!-- 🚀 Compilar -->
+        <button style="display: block; margin-left: auto; margin-right: auto;" (click)="compileCode()">🚀 Compilar</button>
     </div>
 
     <!-- Mensaje de salida -->

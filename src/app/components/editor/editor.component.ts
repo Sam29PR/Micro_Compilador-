@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -22,11 +22,17 @@ import { trigger, transition, style, animate } from '@angular/animations';
     ]
 })
 export class EditorComponent {
+openFile() {
+throw new Error('Method not implemented.');
+}
     code: string = "";
     output: string = "";
     isSuccess: boolean = false;
     tokens: { type: string, value: string }[] = [];
     filename: string = "";
+
+    // Referencia al input para abrir archivos
+    @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
 
     constructor(private http: HttpClient) {}
 
@@ -34,46 +40,51 @@ export class EditorComponent {
         this.code = (event.target as HTMLTextAreaElement).value;
     }
 
-    /** ✅ Crear un nuevo archivo */
-    newFile() {
-        this.code = "";
-        this.output = "🆕 Nuevo archivo creado.";
-        this.tokens = [];
-        this.filename = "";
+    /** ✅ Crear un nuevo archivo (solo web) */
+    codigo: string = '';
+    nombreArchivo: string = 'nuevo_codigo.txt';
+    esNuevoArchivo: boolean = true;
+
+    nuevoArchivo() {
+        this.code = '';
+        this.filename = 'nuevo_codigo.txt';
+        this.output = '🆕 Nuevo archivo creado.';
     }
 
-    /** ✅ Abrir un archivo existente */
-    openFile(event: any) {
+    /** ✅ Abrir un archivo local (solo web) */
+    openFileLocal(event: any) {
         const file = event.target.files[0];
-        if (!file) return;
-
-        this.filename = file.name;
-
-        this.http.post('http://localhost:5000/open-file', { filename: this.filename })
-            .subscribe((response: any) => {
-                this.code = response.content;
-                this.output = `📂 Archivo '${this.filename}' cargado.`;
-            }, error => {
-                this.output = "⚠ Error: No se pudo abrir el archivo.";
-            });
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.code = reader.result as string;
+                this.filename = file.name;
+                this.output = `📂 Archivo '${this.filename}' cargado desde el sistema.`;
+            };
+            reader.readAsText(file);
+        }
     }
 
-    /** ✅ Eliminar un archivo */
-    deleteFile() {
-        if (!this.filename) {
-            this.output = "⚠ Error: No hay archivo seleccionado.";
+    /** ✅ Eliminar archivo (solo web) */
+    deleteFileLocal() {
+        if (!this.code.trim()) {
+            this.output = "⚠ No hay código para eliminar.";
             return;
         }
 
-        this.http.post('http://localhost:5000/delete-file', { filename: this.filename })
-            .subscribe((response: any) => {
-                this.code = "";
-                this.output = `🗑 Archivo '${this.filename}' eliminado correctamente.`;
-                this.tokens = [];
-                this.filename = "";
-            }, error => {
-                this.output = "⚠ Error: No se pudo eliminar el archivo.";
-            });
+        this.code = '';
+        this.filename = '';
+        this.output = "🗑 Archivo borrado (localmente en la sesión).";
+    }
+
+    /** ✅ Guardar archivo (solo web) */
+    saveFile() {
+        const blob = new Blob([this.code], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = this.filename || 'codigo.txt';
+        link.click();
+        this.output = `💾 Archivo '${this.filename || 'codigo.txt'}' guardado.`;
     }
 
     /** ✅ Ver los tokens */
@@ -99,15 +110,24 @@ export class EditorComponent {
             return;
         }
 
-        this.http.post('http://localhost:5000/compile', { code: this.code }).subscribe(
-            (response: any) => {
-                this.output = "✅ Compilación exitosa.";
-                this.isSuccess = true;
-            },
-            error => {
-                this.output = `❌ Error de compilación: ${error.error}`;
-                this.isSuccess = false;
+        this.http.post<any>("http://localhost:5000/compile", {code: this.code}).subscribe({
+            next: (res) => {
+                this.output = res.message;
+                this.isSuccess = true;},
+
+        error: (err) => {
+            this.output = err.error?.error?.join('\n') || "Error desconocido";
+            this.isSuccess = false;
+
             }
+        }
+
         );
+
     }
 }
+
+
+
+
+
