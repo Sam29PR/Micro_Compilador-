@@ -22,8 +22,45 @@
         <!-- 🔍 Ver tokens -->
         <button (click)="viewTokens()">🔍 Ver Tokens</button>
 
-        <!-- 🚀 Compilar -->
-        <button style="display: block; margin-left: auto; margin-right: auto;" (click)="compileCode()">🚀 Compilar</button>
+         <!-- 🚀 Compilar -->
+        <button style="display: block; margin-left: auto; margin-right: auto;" 
+                (click)="compileCode()"
+                [disabled]="isExecuting">🛠 Compilar</button>
+
+          <!-- 🚀 Ejecutar Completo -->
+        <button style="display: block; margin-left: auto; margin-right: auto;"  
+                (click)="executeFull()"
+                [disabled]="isExecuting"
+                [ngClass]="{ 'executing': isExecuting && executionMode === 'full' }">
+            {{ isExecuting && executionMode === 'full' ? '⏳ Ejecutando...' : '🚀 Ejecutar Completo' }}
+        </button>
+
+        <!-- 👣 Paso a Paso -->
+        <button style="display: block; margin-left: auto; margin-right: auto;"  
+                (click)="executeStep()"
+                [disabled]="!isCompiled || (isExecuting && executionMode !== 'step')"
+                [ngClass]="{ 'executing': isExecuting && executionMode === 'step' }">
+            {{ isExecuting && executionMode === 'step' ? '⏳ Paso ' + currentStep + ' de ' + totalSteps : '👣 Paso a Paso' }}
+        </button>
+
+         <!-- ⏹ Detener (solo visible durante ejecución) -->
+        <button style="display: block; margin-left: auto; margin-right: auto;"  
+                *ngIf="isExecuting"
+                (click)="stopExecution()"
+                class="stop-button">
+            ⏹ Detener Ejecución
+        </button>
+        
+        <button class="btn btn-outline-primary me-2" (click)="downloadManual()">
+        📘 Ver Manual Técnico
+        </button>
+
+        <button class="btn btn-outline-success" (click)="downloadUsuario()">
+        🧑‍💻 Ver Manual del Usuario
+        </button>
+
+
+        
     </div>
 
     <!-- Mensaje de salida -->
@@ -32,6 +69,23 @@
         <p [ngClass]="{ 'success-message': isSuccess, 'error-message': !isSuccess }">
             {{ output }}
         </p>
+
+        <!-- Panel de variables (nuevo) -->
+        <div class="variables-panel" *ngIf="executionVariables.length > 0">
+            <h4>Variables:</h4>
+            <div class="variable-grid">
+                <div class="variable-item" *ngFor="let variable of executionVariables">
+                    <span class="variable-name">{{ variable.name }}:</span>
+                    <span class="variable-value">{{ variable.value | json }}</span>
+                    <span class="variable-type">({{ variable.type }})</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de ejecución paso a paso -->
+        <div class="execution-info" *ngIf="executionMode === 'step'">
+            <div>Paso {{ currentStep }} de {{ totalSteps }}</div>
+        </div>
     </div>
 
     <!-- Tabla de tokens -->

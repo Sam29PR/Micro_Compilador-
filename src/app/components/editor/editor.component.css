@@ -150,3 +150,46 @@ button:active {
   color: blue;
   font-weight: bold;
 }
+
+/* Estilo para botón ejecutando */
+button.executing {
+    background-color: #ffc107;
+    color: #000;
+}
+
+/* Panel de variables */
+.variables-panel {
+    margin-top: 15px;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 4px;
+}
+
+.variable-type {
+font-size: 0.8em;
+color: #666;
+display: block;
+margin-top: 2px;
+}
+
+
+.variable-item {
+    display: flex;
+    margin: 5px 0;
+}
+
+.variable-name {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #3f51b5;
+}
+
+.variable-value {
+    font-family: monospace;
+    word-break: break-all;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
